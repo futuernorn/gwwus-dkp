@@ -27,6 +27,9 @@
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 require('bank.php');
+require('install.php');
+
+register_activation_hook( __FILE__, 'gwwus_install' );
 
 // from: http://wordpress.stackexchange.com/questions/127818/how-to-make-a-plugin-require-another-plugin
 add_action( 'admin_init', 'gwwus_plugin_has_twig_plugin' );
