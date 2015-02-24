@@ -2,7 +2,7 @@
 function gwwus_install () {
    global $wpdb;
 
-   $table_name = $wpdb->prefix . "gwwus-dkp_bankitems; 
+   $table_name = $wpdb->prefix . "gwwus-dkp_bankitems"; 
 
 $charset_collate = $wpdb->get_charset_collate();
 
