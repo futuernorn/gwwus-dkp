@@ -30,7 +30,12 @@ SQL;
 }
 
 function gwwus_install_data() {
-
+global $wpdb;
+$table_name = $wpdb->prefix . "gwdkp_bankitems";
+$sql = <<<SQL
+INSERT INTO $table_name (`item_id`, `banker_id`, `item_name`, `game_id`, `item_count`, `color`, `icon`, `location`) VALUES(139786, 1, 'Earthroot', 2449, 82, 'ffffff', 'Interface\\Icons\\INV_Misc_Herb_07', 'Char:Bag4');
+SQL;
+$wpdb->query($sql);
 }
 
 
