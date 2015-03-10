@@ -1,99 +1,30 @@
-<div id="bankerLinks" style="margin: auto;text-align: center;">
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('');">All</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonblues');">Goonblues</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonherbs');">Goonherbs</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonleather');">Goonleather</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonmetal');">Goonmetal</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonquest');">Goonquest</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonshards');">Goonshards</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonwife');">Goonwife</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonrecipes');">Goonrecipes</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonrandom');">Goonrandom</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Gooncloth');">Gooncloth</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goonelement');">Goonelement</a> | 
-<a href="javascript:void(0)" target="_self" onClick="filterBanker('Goongreens');">Goongreens</a>
-<?php
-if ($isCoolDude) {
-  echo ' <br>Alificers: <a href="javascript:void(0)" target="_self" onClick="filterBanker(\'Goonraids\')" style="color:#FF00FF;");">Goonraids</a>';
-  echo ' | <a href="javascript:void(0)" target="_self" onClick="filterBanker(\'Goonjungle\')" style="color:#FF00FF;");">Goonjungle</a> ';
-  echo ' | <a href="javascript:void(0)" target="_self" onClick="filterBanker(\'Goonpharmacy\')" style="color:#FF00FF;");">Goonpharmacy</a> ';
-  $result = $common->query("SELECT totalGold FROM information WHERE id=1"); 
-  list($totalGold) = $result->fetch_row();
-  echo " || Total Gold: $totalGold";
-}
-?>
-</div>
-<br>
-<br>
-
-	<table class="tablesorter" id="bankers_table">
-	<thead>
+<table id="bankers_table">
+<thead>
 	<tr>    
-	  <th class="filter-false" style="width: 3%;">Count</th>
-		<th>Name</th>				
-		<th class="filter-select" style="width: 10%;">Quality</th>
-    <th style="width: 10%;">Item Level</th>
-    <th style="width: 10%;">Req Level</th>
-		<th class="filter-select" style="width: 10%;">Type</th>
-		<th class="filter-select" style="width: 10%;">Subclass</th>
-    <th class="filter-select" style="width: 10%;">Banker</th>
+      	    <th>Count</th>
+            <th>Name</th>				
+            <th>Quality</th>
+      	    <th>Item Level</th>
+            <th>Req Level</th>
+            <th>Type</th>
+            <th>Subclass</th>
+    	    <th>Banker</th>
 	</tr>
 	</thead>
   <tbody>
-<?php
-  getBankerTable($common);
- function getBankerTable($common) {
-  global $isCoolDude;
-  $output = "";
-  $currentBankerList = $common->bankerList;
-  if ($isCoolDude) {
-    // $addition = $common->privateBankerList;
-    // print_r($addition);
-    // $currentBankerList = array_merge($currentBankerList, $addition);
-    $currentBankerList[] = "Goonraids";
-    $currentBankerList[] = "Goonjungle";
-    $currentBankerList[] = "Goonpharmacy";
-  }
-  foreach ($currentBankerList as $banker) {
-  
-    $query = "SELECT bankitems.*, ".
-      "item_template.InventoryType, item_template.class, item_template.ItemLevel, item_template.subclass, item_template.RequiredLevel ".
-      "FROM bankitems, item_template ".
-      "WHERE bankitems.itemId=item_template.entry AND banker='$banker' ".
-      "AND lastUpdated = (SELECT lastUpdated from bankitems WHERE banker='$banker' ORDER BY lastupdated DESC LIMIT 1) ".
-      "ORDER BY banker ASC";
-    $result = $common->query($query);    
-    while(list($id, $banker, $itemName, $itemID, $itemCount, $color, $icon, $dbLastUpdated, $location, $typeVal, $classVal, $itemLevel, $subClassVal, $reqLevel) = $result->fetch_row()) {
-      $quality = getQualityText($color);
+  {% for bank_item in bank_items %}
+     <tr id="{{ bank_item.item_id }}">
+     <td>{{ bank_item.item_count }}</td>
+     <td>{{ bank_item.item_name }}</td>
 
-      $output .= '<tr id="'.$id.'" itemID="'.$itemID.'"><td class="itemCount" id="'.$id.'-itemCount-'.$itemCount.'"><span style="text-align:right">'.$itemCount.'</span></td><td>'.
-      '<a href="'.AOWOWURL.'?item='.$itemID.'" class="itemLink"><font class="itemName" color=#'.$color.'>'.stripslashes($itemName).'</a></font></td><td><font color=#'.$color.'>'.$quality.'</font></td>';
-      $output .= '<td>'.$itemLevel.'</td>'.'<td>'.$reqLevel.'</td>'.'<td>'.$common->inventoryType[$typeVal].'</td><td>'.$common->subClass[$classVal][$subClassVal].'</td><td><a href="javascript:void(0)" title="'.$location.'">'.$banker.'</a></td></tr>';
-    }
-  }
-
-	echo $output;
-  }
-?>
-</tbody>
+     <td>{{ bank_item.game_id }}</td>
+     <td>{{ bank_item.game_id }}</td>	
+     <td>{{ bank_item.game_id }}</td>
+     <td>{{ bank_item.game_id }}</td>
+     <td>{{ bank_item.game_id }}</td>
+     <td>{{ bank_item.banker_id }}</td>
+     </tr>
+  {% endfor %}
+  </tbody>
 </table>
-<br><br>
-<table class="tablesorter" style='width:50%;'>
-<thead>
-<tr><th colspan="2">Latest Updates - By Banker:</th></tr>
-</thead>
-<tbody>
 
-<?php
-foreach ($common->bankerList as $banker) {
-  echo "<tr><td>$banker</td><td>".getLastUpdated($banker,$common)."</td></tr>";
-}
-if ($isCoolDude) {
-  // foreach ($common->privateBankerList as $banker) {
-    echo "<tr><td>Goonraids</td><td>".getLastUpdated("Goonraids",$common)."</td></tr>";
-    echo "<tr><td>Goonjungle</td><td>".getLastUpdated("Goonjungle",$common)."</td></tr>";
-    echo "<tr><td>Goonpharmacy</td><td>".getLastUpdated("Goonpharmacy",$common)."</td></tr>";
-  // }
-}
-?>
-</tbody></table>

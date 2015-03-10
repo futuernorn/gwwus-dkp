@@ -31,6 +31,26 @@ require('gw-database.php');
 
 register_activation_hook( __FILE__, 'gwwus_install' );
 register_activation_hook( __FILE__, 'gwwus_install_data' );
+
+
+add_action( 'admin_menu', 'my_plugin_menu' );
+
+
+function my_plugin_menu() {
+	add_options_page( 'GWWUS DKP Options', 'GWWUS DKP', 'manage_options', 'gwwus-dkp', 'my_plugin_options' );
+}
+
+
+function my_plugin_options() {
+	if ( !current_user_can( 'manage_options' ) )  {
+		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+	}
+	echo '<div class="wrap">';
+	echo '<p>Here is where the form would go if I actually had options.</p>';
+	echo '</div>';
+}
+
+
 // from: http://wordpress.stackexchange.com/questions/127818/how-to-make-a-plugin-require-another-plugin
 add_action( 'admin_init', 'gwwus_plugin_has_twig_plugin' );
 function gwwus_plugin_has_twig_plugin() {
@@ -46,7 +66,7 @@ function gwwus_plugin_has_twig_plugin() {
 }
 
 function gwwus_twig_required_notice(){
-    ?><div class="error"><p>Sorry, but GWWUS DKP requires the <a href='https://wordpress.org/plugins/timber-library/' alt='twig-library download page'>Twig</a> plugin to be installed and active.</p></div><?php
+    ?><div class="error"><p>Sorry, but GWWUS DKP requires the <a href='https://wordpress.org/plugins/timber-library/' alt='twig-library download page' target='_blank'>Twig</a> plugin to be installed and active.</p></div><?php
 }
 
 ?>
