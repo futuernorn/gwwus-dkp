@@ -47,6 +47,7 @@ function gwwus_activation() {
  */
 function gwwus_do_this_hourly() {
 	// do something every hour
+    error_log("GWWUS hourly cron");
 }
 
 
