@@ -31,23 +31,32 @@ require('gw-database.php');
 
 register_activation_hook( __FILE__, 'gwwus_install' );
 register_activation_hook( __FILE__, 'gwwus_install_data' );
+add_action( 'admin_notices', 'gwwus_admin_import_notice' );
+add_action( 'admin_footer', 'gwwus_action_bulk_import' ); 
+
+add_action( 'admin_menu', 'gwwus_plugin_menu' );
 
 
-add_action( 'admin_menu', 'my_plugin_menu' );
-
-
-function my_plugin_menu() {
-	add_options_page( 'GWWUS DKP Options', 'GWWUS DKP', 'manage_options', 'gwwus-dkp', 'my_plugin_options' );
+function gwwus_plugin_menu() {
+	add_options_page( 'GWWUS DKP Options', 'GWWUS DKP', 'manage_options', 'gwwus-dkp', 'gwwus_plugin_options' );
 }
 
 
-function my_plugin_options() {
+function gwwus_plugin_options() {
 	if ( !current_user_can( 'manage_options' ) )  {
 		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 	}
-	echo '<div class="wrap">';
-	echo '<p>Here is where the form would go if I actually had options.</p>';
-	echo '</div>';
+    $data = Timber::get_context();
+    switch ($_GET['action']) {
+    case "post-install":
+        Timber::render('templates/post-install.twig', $data);
+        break;
+    default:
+        echo '<div class="wrap">';
+        echo '<p>Here is where the form would go if I actually had options.</p>';
+        echo '</div>';
+    }
+	
 }
 
 
@@ -69,4 +78,81 @@ function gwwus_twig_required_notice(){
     ?><div class="error"><p>Sorry, but GWWUS DKP requires the <a href='https://wordpress.org/plugins/timber-library/' alt='twig-library download page' target='_blank'>Twig</a> plugin to be installed and active.</p></div><?php
 }
 
+
+function gwwus_action_bulk_import() {
+    if (!get_option( "gwwus-dkp_current-import-row", false )) {
+        add_option( "gwwus-dkp_current-import-row", 0 );
+        
+    }
+    if (get_option('gwwus-dkp_current-import-row') < 14401) {
+        
+    ?>
+    	<script type="text/javascript" >
+	jQuery(document).ready(function($) {
+
+		var data = {
+			'action': 'gwwus_action_bulk_import',
+			'current_row': <?php echo get_option('gwwus-dkp_current-import-row');?>
+		};
+
+        $('#gwwus_admin_import_notice').html("Import beginning...<div class='spinner'></div>");
+		$.post(ajaxurl, data, function(response) {
+			console.log('Got this from the server: ' + response);
+            eval(response);
+		});
+	});
+	</script> <?php
+          }
+    
+}
+function gwwus_admin_import_notice() {
+    ?>
+    <div id="gwwus_admin_import_notice" class='updated'>
+<p>test</p>        
+    </div>
+    <?php
+}
+
+
+add_action( 'wp_ajax_gwwus_action_bulk_import', 'gwwus_bulk_import_callback' );
+
+function gwwus_bulk_import_callback() {
+    //    echo "callback";
+	global $wpdb; // this is how you get access to the database
+
+	$current_row = intval( $_POST['current_row'] );
+
+    if ($current_row < 14401) {
+        $next_row = $current_row +  1000;
+        $dir = plugin_dir_path( __FILE__ );
+        $data = file($dir.'item_template_clean.sql');
+        $sql = "";
+        for ($i = $current_row; $i <= $next_row; $i++) {
+            $sql .= $data[$i];
+        }
+        $table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
+        $wpdb->query($wpdb->prepare($sql,$table_name));
+
+            
+?>
+        
+        var data = {
+            'action': 'gwwus_action_bulk_import',
+            'current_row': <?php echo $next_row;?>
+        };
+        console.log("Importing rows from <?php echo"$current_row to $next_row";?>...");
+$('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_row to $next_row";?>...<div class='spinner'></div>");
+        setTimeout(function(){$.post(ajaxurl, data, function(response) {
+			console.log('Got this from the server: ' + response);
+            eval(response);
+		})},2000);
+        
+        <?php
+    } else {
+        echo "Import complete!<br>";
+    }	
+
+	wp_die();
+    exit();
+}
 ?>
