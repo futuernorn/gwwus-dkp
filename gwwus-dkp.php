@@ -57,6 +57,7 @@ function gwwus_do_this_hourly() {
  */
 function gwwus_deactivation() {
 	wp_clear_scheduled_hook( 'gwwus_hourly_event_hook' );
+    delete_option( "gwwus-dkp_current-import-row");    
 }
 
 
