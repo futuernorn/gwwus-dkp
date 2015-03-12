@@ -73,6 +73,7 @@ function gwwus_plugin_menu() {
 
 function gwwus_plugin_options() {
 	if ( !current_user_can( 'manage_options' ) )  {
+        
 		wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
 	}
     $data = Timber::get_context();
@@ -153,6 +154,8 @@ function gwwus_bulk_import_callback() {
 
     if ($current_row < 14401) {
         $next_row = $current_row +  1000;
+        if ($next_row > 14401)
+            $next_row = 14401;
         $dir = plugin_dir_path( __FILE__ );
         $data = file($dir.'item_template_clean.sql');
         $sql = "";
@@ -178,7 +181,7 @@ $('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_ro
         
         <?php
     } else {
-        echo "Import complete!<br>";
+        
     }	
 
 	wp_die();
