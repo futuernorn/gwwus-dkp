@@ -181,7 +181,7 @@ $('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_ro
         
         <?php
     } else {
-        
+        echo "Import complete";
     }	
 
 	wp_die();
