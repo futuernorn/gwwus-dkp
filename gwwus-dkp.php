@@ -31,9 +31,37 @@ require('gw-database.php');
 
 register_activation_hook( __FILE__, 'gwwus_install' );
 register_activation_hook( __FILE__, 'gwwus_install_data' );
+register_activation_hook( __FILE__, 'gwwus_activation' );
+register_deactivation_hook( __FILE__, 'gwwus_deactivation' );
+
+/**
+ * On activation, set a time, frequency and name of an action hook to be scheduled.
+ */
+function gwwus_activation() {
+	wp_schedule_event( time(), 'hourly', 'gwwus_hourly_event_hook' );
+}
+
+
+/**
+ * On the scheduled action hook, run the function.
+ */
+function gwwus_do_this_hourly() {
+	// do something every hour
+}
+
+
+
+/**
+ * On deactivation, remove all functions from the scheduled action hook.
+ */
+function gwwus_deactivation() {
+	wp_clear_scheduled_hook( 'gwwus_hourly_event_hook' );
+}
+
+
 add_action( 'admin_notices', 'gwwus_admin_import_notice' );
 add_action( 'admin_footer', 'gwwus_action_bulk_import' ); 
-
+add_action( 'gwwus_hourly_event_hook', 'gwwus_do_this_hourly' );
 add_action( 'admin_menu', 'gwwus_plugin_menu' );
 
 
