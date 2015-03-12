@@ -164,7 +164,7 @@ function gwwus_bulk_import_callback() {
         }
         $table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
         $wpdb->query($wpdb->prepare($sql,$table_name));
-
+        update_option("gwwus-dkp_current-import-row", $next_row);
             
 ?>
         
@@ -173,7 +173,7 @@ function gwwus_bulk_import_callback() {
             'current_row': <?php echo $next_row;?>
         };
         console.log("Importing rows from <?php echo"$current_row to $next_row";?>...");
-$('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_row to $next_row";?>...<div class='spinner'></div>");
+        $('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_row to $next_row";?>...<div class='spinner'></div>");
         setTimeout(function(){$.post(ajaxurl, data, function(response) {
 			console.log('Got this from the server: ' + response);
             eval(response);
@@ -181,7 +181,9 @@ $('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_ro
         
         <?php
     } else {
-        echo "Import complete";
+        ?>
+        $('#gwwus_admin_import_notice').html("Importing completed!");
+        <?php
     }	
 
 	wp_die();

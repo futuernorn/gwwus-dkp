@@ -3,7 +3,9 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
 function gwwus_generate_inventory_table() {
     global $wpdb;
-    $table_name = $wpdb->prefix . "gwdkp_bankitems"; 
+    $bank_table_name = $wpdb->prefix . "gwdkp_bankitems";
+     
+    $itemtemplate_table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
     $bankItems = $wpdb->get_results( 
         "
 	SELECT * 
