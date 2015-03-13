@@ -161,7 +161,7 @@ function gwwus_bulk_import_callback() {
             $next_row = 14401;
         $dir = plugin_dir_path( __FILE__ );
         $data = file($dir.'item_template_clean.sql');
-        echo $dir.'item_template_clean.sql';
+        //echo $dir.'item_template_clean.sql';
         $sql = "";
         for ($i = $current_row; $i <= $next_row; $i++) {
             $sql .= $data[$i];
@@ -179,7 +179,7 @@ function gwwus_bulk_import_callback() {
         console.log("Importing rows from <?php echo"$current_row to $next_row";?>...");
         $('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_row to $next_row";?>...<div class='spinner'></div>");
         setTimeout(function(){$.post(ajaxurl, data, function(response) {
-			//console.log('Got this from the server: ' + <?php echo $sql;?>);
+		
             eval(response);
 		})},2000);
         
