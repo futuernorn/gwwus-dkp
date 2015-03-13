@@ -85,8 +85,10 @@ function gwwus_plugin_options() {
     default:
         echo '<div class="wrap">';
         echo '<p>Here is where the form would go if I actually had options.</p>';
+        echo '<p>Doing sleep test....</p>';
         echo '</div>';
     }
+    sleep(121);
 	
 }
 
@@ -159,6 +161,7 @@ function gwwus_bulk_import_callback() {
             $next_row = 14401;
         $dir = plugin_dir_path( __FILE__ );
         $data = file($dir.'item_template_clean.sql');
+        echo $dir.'item_template_clean.sql';
         $sql = "";
         for ($i = $current_row; $i <= $next_row; $i++) {
             $sql .= $data[$i];
