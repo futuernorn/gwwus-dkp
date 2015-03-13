@@ -85,10 +85,10 @@ function gwwus_plugin_options() {
     default:
         echo '<div class="wrap">';
         echo '<p>Here is where the form would go if I actually had options.</p>';
-        echo '<p>Doing sleep test....</p>';
+        //echo '<p>Doing sleep test....</p>';
         echo '</div>';
     }
-    sleep(121);
+    //sleep(121);
 	
 }
 
