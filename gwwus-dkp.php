@@ -163,21 +163,25 @@ function gwwus_bulk_import_callback() {
 
         $dir = plugin_dir_path( __FILE__ );
         $data = file($dir.'item_template_clean.sql');
+        //echo $dir.'item_template_clean.sql';
         
 
         $table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
         $sql = "";
 
         for ($i = $current_row; $i <= $next_row; $i++) {
-            $sql .= $data[$i];
+            $current_stmt = $data[$i];
+            
+            $sql = "INSERT INTO $table_name ".$current_stmt;
+                    $wpdb->query($sql);
         }
-                
-        $formatted_sql = $wpdb->prepare($sql, $table_name);
+        //echo $sql;       
         
         
-        //$wpdb->query($formatted_sql);
+        
+
         update_option("gwwus-dkp_current-import-row", $next_row);
-        echo $formatted_sql;        
+        //        echo "formatted_sql: $formatted_sql";
 ?>
         
         var data = {
