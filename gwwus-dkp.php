@@ -175,7 +175,7 @@ function gwwus_bulk_import_callback() {
         $formatted_sql = $wpdb->prepare($sql, $table_name);
         
         
-        $wpdb->query($formatted_sql);
+        //$wpdb->query($formatted_sql);
         update_option("gwwus-dkp_current-import-row", $next_row);
         echo $formatted_sql;        
 ?>
