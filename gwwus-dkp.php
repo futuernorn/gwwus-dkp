@@ -151,7 +151,8 @@ add_action( 'wp_ajax_gwwus_action_bulk_import', 'gwwus_bulk_import_callback' );
 
 function gwwus_bulk_import_callback() {
     //    echo "callback";
-	global $wpdb; // this is how you get access to the database
+    
+    global $wpdb; // this is how you get access to the database
 
 	$current_row = intval( $_POST['current_row'] );
 
@@ -159,17 +160,24 @@ function gwwus_bulk_import_callback() {
         $next_row = $current_row +  1000;
         if ($next_row > 14401)
             $next_row = 14401;
+
         $dir = plugin_dir_path( __FILE__ );
         $data = file($dir.'item_template_clean.sql');
-        //echo $dir.'item_template_clean.sql';
+        
+
+        $table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
         $sql = "";
+
         for ($i = $current_row; $i <= $next_row; $i++) {
             $sql .= $data[$i];
         }
-        $table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
-        $wpdb->query($wpdb->prepare($sql,$table_name));
+                
+        $formatted_sql = $wpdb->prepare($sql, $table_name);
+        
+        
+        $wpdb->query($formatted_sql);
         update_option("gwwus-dkp_current-import-row", $next_row);
-            
+        echo $formatted_sql;        
 ?>
         
         var data = {
@@ -184,12 +192,13 @@ function gwwus_bulk_import_callback() {
 		})},2000);
         
         <?php
+        //*/
     } else {
         ?>
         $('#gwwus_admin_import_notice').html("Importing completed!");
         <?php
     }	
-
+        
 	wp_die();
     exit();
 }
