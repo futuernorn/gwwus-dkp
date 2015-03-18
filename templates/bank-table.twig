@@ -13,18 +13,24 @@
 	</thead>
   <tbody>
   {% for bank_item in bank_items %}
-     <tr id="{{ bank_item.item_id }}">
+    
+    <tr id="{{ bank_item.item_id }}">
      <td>{{ bank_item.item_count }}</td>
      <td>{{ bank_item.item_name }}</td>
 
-     <td>{{ bank_item.game_id }}</td>
-     <td>{{ bank_item.game_id }}</td>	
-     <td>{{ bank_item.game_id }}</td>
-     <td>{{ bank_item.game_id }}</td>
-     <td>{{ bank_item.game_id }}</td>
+     <td>{{ bank_item.qualityTxt }}</td>
+     <td>{{ bank_item.ItemLevel }}</td>	
+     <td>{{ bank_item.RequiredLevel }}</td>
+     <td>{{ bank_item.inventoryTypeTxt }}</td>
+     <td>{{ bank_item.subClassTxt }}</td>
      <td>{{ bank_item.banker_id }}</td>
      </tr>
   {% endfor %}
   </tbody>
 </table>
 
+
+
+<pre>
+    {{ dump(bank_items) }}
+</pre>

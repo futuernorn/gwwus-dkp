@@ -1,0 +1,12 @@
+entry
+class
+subclass
+name
+Quality
+InventoryType
+AllowableClass
+ItemLevel
+RequiredLevel
+RequiredSkill
+RequiredSkillRank
+maxcount
