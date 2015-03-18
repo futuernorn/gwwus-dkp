@@ -1,0 +1,15 @@
+0,Goonherbs
+1,Goonrecipes
+2,Goonquest
+3,Goongreens
+4,Goonleather
+5,Goonmetal
+6,Goonshards
+7,Goonwife
+8,Goonrandom
+9,Gooncloth
+10,Goonelement
+11,Goonblues
+12,Goonraids
+13,Goonjungle
+14,Goonpharmacy

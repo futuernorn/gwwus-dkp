@@ -8,7 +8,7 @@ function gwwus_generate_inventory_table() {
     $bank_table_name = $wpdb->prefix . "gwdkp_bankitems";
      
     $itemtemplate_table_name = $wpdb->prefix . "gwdkp_iteminfo";
-    $sql = "SELECT * FROM $bank_table_name LEFT JOIN $itemtemplate_table_name ON (entry = game_id);";
+    $sql = "SELECT * FROM $bank_table_name LEFT JOIN $itemtemplate_table_name ON (entry = game_id) LIMIT 50;";
          // error_log($sql);
     $bankItems = $wpdb->get_results( $sql  );
     
@@ -17,7 +17,7 @@ function gwwus_generate_inventory_table() {
         
         $inventoryTypeNum = $bankItem->InventoryType;
         $bankItem->inventoryTypeTxt = $inventoryType[$inventoryTypeNum];
-        $bankItem->subClassTxt = $subClass[$bankItem->subclass][$bankItem->class];
+        $bankItem->subClassTxt = $subClass[$bankItem->class][$bankItem->subclass];
         $bankItem->qualityTxt = gwwus_get_quality_text($bankItem->color);
     }
     $data = Timber::get_context();

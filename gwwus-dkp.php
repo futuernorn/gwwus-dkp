@@ -29,6 +29,7 @@ defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 require('gw-bank.php');
 require('gw-database.php');
 
+
 register_activation_hook( __FILE__, 'gwwus_install' );
 register_activation_hook( __FILE__, 'gwwus_install_data' );
 register_activation_hook( __FILE__, 'gwwus_activation' );
@@ -62,7 +63,7 @@ function gwwus_deactivation() {
 
 
 add_action( 'admin_notices', 'gwwus_admin_import_notice' );
-add_action( 'admin_footer', 'gwwus_action_bulk_import' ); 
+//add_action( 'admin_footer', 'gwwus_action_bulk_import' ); 
 add_action( 'gwwus_hourly_event_hook', 'gwwus_do_this_hourly' );
 add_action( 'admin_menu', 'gwwus_plugin_menu' );
 
@@ -111,43 +112,18 @@ function gwwus_twig_required_notice(){
     ?><div class="error"><p>Sorry, but GWWUS DKP requires the <a href='https://wordpress.org/plugins/timber-library/' alt='twig-library download page' target='_blank'>Twig</a> plugin to be installed and active.</p></div><?php
 }
 
-
-function gwwus_action_bulk_import() {
-    if (!get_option( "gwwus-dkp_current-import-row", false )) {
-        add_option( "gwwus-dkp_current-import-row", 0 );
-        
-    }
-    if (get_option('gwwus-dkp_current-import-row') < 14401) {
-        
-    ?>
-    	<script type="text/javascript" >
-	jQuery(document).ready(function($) {
-
-		var data = {
-			'action': 'gwwus_action_bulk_import',
-			'current_row': <?php echo get_option('gwwus-dkp_current-import-row');?>
-		};
-
-        $('#gwwus_admin_import_notice').html("Import beginning...<div class='spinner'></div>");
-		$.post(ajaxurl, data, function(response) {
-			console.log('Got this from the server: ' + response);
-            eval(response);
-		});
-	});
-	</script> <?php
-          }
-    
-}
 function gwwus_admin_import_notice() {
+    /*
     ?>
     <div id="gwwus_admin_import_notice" class='updated'>
 <p>test</p>        
     </div>
     <?php
+    */
 }
 
 
-add_action( 'wp_ajax_gwwus_action_bulk_import', 'gwwus_bulk_import_callback' );
+//add_action( 'wp_ajax_gwwus_action_bulk_import', 'gwwus_bulk_import_callback' );
 
 function gwwus_bulk_import_callback() {
     //    echo "callback";

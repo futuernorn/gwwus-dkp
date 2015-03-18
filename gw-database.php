@@ -52,17 +52,59 @@ SQL;
 function gwwus_install_data() {
     global $wpdb;
     $table_name = $wpdb->prefix . "gwdkp_bankitems";
-    $sql = <<<SQL
-INSERT INTO $table_name (item_id, banker_id, item_name, game_id, item_count, color, icon, location) VALUES(139786, 1, 'Earthroot', 2449, 82, 'ffffff', 'Interface\\Icons\\INV_Misc_Herb_07', 'Char:Bag4');
-SQL;
-    $wpdb->query($sql);
+    $dir = plugin_dir_path( __FILE__ );
+    $bankers_table_name = $wpdb->prefix . "gwdkp_bankers";
+    /*
+    $bank_item_csv_file = fopen($dir.'bank_item_test.csv', 'r');
+    error_log(date().": ".$dir.'bank_item_test.csv');
+    
+    while (($current_row = fgetcsv($bank_item_csv_file)) !== FALSE) {
+        $wpdb->insert( 
+            $table_name, 
+            array(
+                'item_id' => $current_row[0],
+                'banker_id' => $current_row[1],
+                'item_name' => $current_row[2],
+                'game_id' => $current_row[3],
+                'item_count' => $current_row[4],
+                'color' => $current_row[5],
+                'icon' => $current_row[6],
+                'location' => $current_row[8]
+            ) 
+        );
+    }
+
+    fclose($bankers_csv_file);
+    */
+    $bank_item_csv_file = fopen($dir.'bank_item_test.csv', 'r');
+    error_log(date().": ".$dir.'bank_item_test.csv');
+    
+    while (($current_row = fgetcsv($bank_item_csv_file)) !== FALSE) {
+        $wpdb->insert( 
+            $table_name, 
+            array(
+                'item_id' => $current_row[0],
+                'banker_id' => $current_row[1],
+                'item_name' => $current_row[2],
+                'game_id' => $current_row[3],
+                'item_count' => $current_row[4],
+                'color' => $current_row[5],
+                'icon' => $current_row[6],
+                'location' => $current_row[8]
+            ) 
+        );
+    }
+
+    fclose($bank_item_csv_file);
+    
 
     $itemtemplate_table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
 
     $dir = plugin_dir_path( __FILE__ );
-    $item_template_csv_file = fopen($dir.'item_template_clean.sql', 'r');
-    $item_template_csv = fgetcsv($item_template_csv_file);
-    foreach($current_row as $item_template_csv) {
+    $item_template_csv_file = fopen($dir.'item_template_dump.csv', 'r');
+    error_log(date().": ".$dir.'item_template_dump.csv');
+    
+    while (($current_row = fgetcsv($item_template_csv_file)) !== FALSE) {
         $wpdb->insert( 
             $itemtemplate_table_name, 
             array(

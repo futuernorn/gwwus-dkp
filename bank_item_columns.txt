@@ -1,0 +1,8 @@
+item_id
+banker_id
+item_name
+game_id
+item_count
+color
+icon
+location
