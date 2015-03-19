@@ -86,10 +86,8 @@ function gwwus_plugin_options() {
     default:
         echo '<div class="wrap">';
         echo '<p>Here is where the form would go if I actually had options.</p>';
-        //echo '<p>Doing sleep test....</p>';
         echo '</div>';
     }
-    //sleep(121);
 	
 }
 
@@ -109,7 +107,8 @@ function gwwus_plugin_has_twig_plugin() {
 }
 
 function gwwus_twig_required_notice(){
-    ?><div class="error"><p>Sorry, but GWWUS DKP requires the <a href='https://wordpress.org/plugins/timber-library/' alt='twig-library download page' target='_blank'>Twig</a> plugin to be installed and active.</p></div><?php
+	$data = Timber::get_context();
+	Timber::render('templates/notices/twig_required.twig');
 }
 
 function gwwus_admin_import_notice() {
@@ -125,61 +124,4 @@ function gwwus_admin_import_notice() {
 
 //add_action( 'wp_ajax_gwwus_action_bulk_import', 'gwwus_bulk_import_callback' );
 
-function gwwus_bulk_import_callback() {
-    //    echo "callback";
-    
-    global $wpdb; // this is how you get access to the database
-
-	$current_row = intval( $_POST['current_row'] );
-
-    if ($current_row < 14401) {
-        $next_row = $current_row +  1000;
-        if ($next_row > 14401)
-            $next_row = 14401;
-
-        $dir = plugin_dir_path( __FILE__ );
-        $data = file($dir.'item_template_clean.sql');
-        //echo $dir.'item_template_clean.sql';
-        
-
-        $table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
-        $sql = "";
-
-        for ($i = $current_row; $i <= $next_row; $i++) {
-            $current_stmt = $data[$i];
-            
-            $sql = "INSERT INTO $table_name ".$current_stmt;
-                    $wpdb->query($sql);
-        }
-        //echo $sql;       
-        
-        
-        
-
-        update_option("gwwus-dkp_current-import-row", $next_row);
-        //        echo "formatted_sql: $formatted_sql";
-?>
-        
-        var data = {
-            'action': 'gwwus_action_bulk_import',
-            'current_row': <?php echo $next_row;?>
-        };
-        console.log("Importing rows from <?php echo"$current_row to $next_row";?>...");
-        $('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_row to $next_row";?>...<div class='spinner'></div>");
-        setTimeout(function(){$.post(ajaxurl, data, function(response) {
-		
-            eval(response);
-		})},2000);
-        
-        <?php
-        //*/
-    } else {
-        ?>
-        $('#gwwus_admin_import_notice').html("Importing completed!");
-        <?php
-    }	
-        
-	wp_die();
-    exit();
-}
 ?>
