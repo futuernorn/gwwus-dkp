@@ -35,13 +35,20 @@ register_activation_hook( __FILE__, 'gwwus_install_data' );
 register_activation_hook( __FILE__, 'gwwus_activation' );
 register_deactivation_hook( __FILE__, 'gwwus_deactivation' );
 
+add_action( 'wp_enqueue_scripts', 'gwwus_scripts_method' );
+add_action( 'admin_notices', 'gwwus_admin_import_notice' );
+//add_action( 'admin_footer', 'gwwus_action_bulk_import' );
+//add_action( 'wp_ajax_gwwus_action_bulk_import', 'gwwus_bulk_import_callback' );
+add_action( 'gwwus_hourly_event_hook', 'gwwus_do_this_hourly' );
+add_action( 'admin_menu', 'gwwus_plugin_menu' );
+
+
 /**
  * On activation, set a time, frequency and name of an action hook to be scheduled.
  */
 function gwwus_activation() {
 	wp_schedule_event( time(), 'hourly', 'gwwus_hourly_event_hook' );
 }
-
 
 /**
  * On the scheduled action hook, run the function.
@@ -51,8 +58,6 @@ function gwwus_do_this_hourly() {
     error_log("GWWUS hourly cron");
 }
 
-
-
 /**
  * On deactivation, remove all functions from the scheduled action hook.
  */
@@ -61,17 +66,9 @@ function gwwus_deactivation() {
     delete_option( "gwwus-dkp_current-import-row");    
 }
 
-
-add_action( 'admin_notices', 'gwwus_admin_import_notice' );
-//add_action( 'admin_footer', 'gwwus_action_bulk_import' ); 
-add_action( 'gwwus_hourly_event_hook', 'gwwus_do_this_hourly' );
-add_action( 'admin_menu', 'gwwus_plugin_menu' );
-
-
 function gwwus_plugin_menu() {
 	add_options_page( 'GWWUS DKP Options', 'GWWUS DKP', 'manage_options', 'gwwus-dkp', 'gwwus_plugin_options' );
 }
-
 
 function gwwus_plugin_options() {
 	if ( !current_user_can( 'manage_options' ) )  {
@@ -86,13 +83,10 @@ function gwwus_plugin_options() {
     default:
         echo '<div class="wrap">';
         echo '<p>Here is where the form would go if I actually had options.</p>';
-        //echo '<p>Doing sleep test....</p>';
         echo '</div>';
     }
-    //sleep(121);
 	
 }
-
 
 // from: http://wordpress.stackexchange.com/questions/127818/how-to-make-a-plugin-require-another-plugin
 add_action( 'admin_init', 'gwwus_plugin_has_twig_plugin' );
@@ -109,7 +103,8 @@ function gwwus_plugin_has_twig_plugin() {
 }
 
 function gwwus_twig_required_notice(){
-    ?><div class="error"><p>Sorry, but GWWUS DKP requires the <a href='https://wordpress.org/plugins/timber-library/' alt='twig-library download page' target='_blank'>Twig</a> plugin to be installed and active.</p></div><?php
+	$data = Timber::get_context();
+	Timber::render('templates/notices/twig_required.twig');
 }
 
 function gwwus_admin_import_notice() {
@@ -122,64 +117,8 @@ function gwwus_admin_import_notice() {
     */
 }
 
-
-//add_action( 'wp_ajax_gwwus_action_bulk_import', 'gwwus_bulk_import_callback' );
-
-function gwwus_bulk_import_callback() {
-    //    echo "callback";
-    
-    global $wpdb; // this is how you get access to the database
-
-	$current_row = intval( $_POST['current_row'] );
-
-    if ($current_row < 14401) {
-        $next_row = $current_row +  1000;
-        if ($next_row > 14401)
-            $next_row = 14401;
-
-        $dir = plugin_dir_path( __FILE__ );
-        $data = file($dir.'item_template_clean.sql');
-        //echo $dir.'item_template_clean.sql';
-        
-
-        $table_name = $wpdb->prefix . "gwdkp_iteminfo"; 
-        $sql = "";
-
-        for ($i = $current_row; $i <= $next_row; $i++) {
-            $current_stmt = $data[$i];
-            
-            $sql = "INSERT INTO $table_name ".$current_stmt;
-                    $wpdb->query($sql);
-        }
-        //echo $sql;       
-        
-        
-        
-
-        update_option("gwwus-dkp_current-import-row", $next_row);
-        //        echo "formatted_sql: $formatted_sql";
-?>
-        
-        var data = {
-            'action': 'gwwus_action_bulk_import',
-            'current_row': <?php echo $next_row;?>
-        };
-        console.log("Importing rows from <?php echo"$current_row to $next_row";?>...");
-        $('#gwwus_admin_import_notice').html("Importing rows from <?php echo"$current_row to $next_row";?>...<div class='spinner'></div>");
-        setTimeout(function(){$.post(ajaxurl, data, function(response) {
-		
-            eval(response);
-		})},2000);
-        
-        <?php
-        //*/
-    } else {
-        ?>
-        $('#gwwus_admin_import_notice').html("Importing completed!");
-        <?php
-    }	
-        
-	wp_die();
-    exit();
+function gwwus_scripts_method() {
+	wp_enqueue_script('gwwus-ajax-item-info', plugins_url('/js/power.js', __FILE__ ),  array(), '', true );
 }
+
 ?>

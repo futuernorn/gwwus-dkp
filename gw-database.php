@@ -23,22 +23,22 @@ function gwwus_install () {
            UNIQUE KEY id (item_id)
        ) $charset_collate;
 
-CREATE TABLE $itemtemplate_table_name (
-  entry mediumint(8) unsigned NOT NULL DEFAULT '0',
-  class tinyint(3) unsigned NOT NULL DEFAULT '0',
-  subclass tinyint(3) unsigned NOT NULL DEFAULT '0',
-  name varchar(255) NOT NULL DEFAULT '',
-  Quality tinyint(3) unsigned NOT NULL DEFAULT '0',
-  InventoryType tinyint(3) unsigned NOT NULL DEFAULT '0',
-  AllowableClass mediumint(9) NOT NULL DEFAULT '-1',
-  ItemLevel tinyint(3) unsigned NOT NULL DEFAULT '0',
-  RequiredLevel tinyint(3) unsigned NOT NULL DEFAULT '0',
-  RequiredSkill smallint(5) unsigned NOT NULL DEFAULT '0',
-  RequiredSkillRank smallint(5) unsigned NOT NULL DEFAULT '0',
-  maxcount smallint(5) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (entry),
-  KEY items_index (class)
-) $charset_collate
+	CREATE TABLE $itemtemplate_table_name (
+	  entry mediumint(8) unsigned NOT NULL DEFAULT '0',
+	  class tinyint(3) unsigned NOT NULL DEFAULT '0',
+	  subclass tinyint(3) unsigned NOT NULL DEFAULT '0',
+	  name varchar(255) NOT NULL DEFAULT '',
+	  Quality tinyint(3) unsigned NOT NULL DEFAULT '0',
+	  InventoryType tinyint(3) unsigned NOT NULL DEFAULT '0',
+	  AllowableClass mediumint(9) NOT NULL DEFAULT '-1',
+	  ItemLevel tinyint(3) unsigned NOT NULL DEFAULT '0',
+	  RequiredLevel tinyint(3) unsigned NOT NULL DEFAULT '0',
+	  RequiredSkill smallint(5) unsigned NOT NULL DEFAULT '0',
+	  RequiredSkillRank smallint(5) unsigned NOT NULL DEFAULT '0',
+	  maxcount smallint(5) unsigned NOT NULL DEFAULT '0',
+	  PRIMARY KEY (entry),
+	  KEY items_index (class)
+	) $charset_collate
 
 SQL;
 

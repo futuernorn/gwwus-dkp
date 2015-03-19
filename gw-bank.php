@@ -21,6 +21,7 @@ function gwwus_generate_inventory_table() {
         $bankItem->qualityTxt = gwwus_get_quality_text($bankItem->color);
     }
     $data = Timber::get_context();
+	$data['aowow_url'] = "http://db.vanillagaming.org/?item=";
     $data['bank_items'] = $bankItems;
     
     Timber::render('templates/bank-table.twig', $data);
